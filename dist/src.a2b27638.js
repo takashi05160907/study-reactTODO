@@ -128,26 +128,62 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
     // liタグ生成
     var li = document.createElement("li");
-    console.log(li);
 
     //div生成
     var div = document.createElement("div");
     div.className = "list-raw";
-    console.log(div);
 
     // p生成
     var p = document.createElement("p");
     p.innerText = inputText;
-    console.log(p);
+
+    // buttonタグの生成
+    var completeButton = document.createElement("button");
+    completeButton.innerText = "完了";
+    completeButton.addEventListener("click", function () {
+      // 要素の削除
+      deleteFromCompleteList(completeButton.closest(".list-raw").parentNode);
+      // 完了リストに追加する要素
+      var getnodeElement = completeButton.parentNode;
+      var addTarget = getnodeElement.parentNode;
+      var text = getnodeElement.firstElementChild.innerText;
+      getnodeElement.textContent = null;
+
+      // liタグ生成
+      var li = document.createElement("li");
+      // p生成
+      var p = document.createElement("p");
+      //buttonタグの生成
+      var backButton = document.createElement("button");
+      backButton.innerText = "戻す";
+      p.innerText = text;
+      getnodeElement.appendChild(p);
+      getnodeElement.appendChild(backButton);
+      li.appendChild(getnodeElement);
+      document.getElementById("complete-list").appendChild(li);
+    });
+    // 削除ボタンを
+    var deleteButton = document.createElement("button");
+    deleteButton.innerText = "削除";
+    deleteButton.addEventListener("click", function () {
+      //押された削除ボタンの親要素のliを未完了リストから削除
+      deleteFromCompleteList(deleteButton.closest(".list-raw").parentNode);
+    });
 
     //divタグの子要素に各要素を設定
     div.appendChild(p);
-    console.log(div);
     li.appendChild(div);
-    console.log(li);
+    div.appendChild(completeButton);
+    div.appendChild(deleteButton);
 
     //未完了のリストに追加する
     document.getElementById("incomplete-list").appendChild(li);
+
+    // 未完了リストからボタンを押したリストを削除する
+    var deleteFromCompleteList = function deleteFromCompleteList(target) {
+      var movecomplete = completeButton.closest(".list-raw").parentNode;
+      document.getElementById("incomplete-list").removeChild(target);
+    };
   };
   document.getElementById("addButton").addEventListener("click", function () {
     return onClickAdd();
