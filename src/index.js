@@ -1,76 +1,77 @@
 "use strict";
 
 {
+  //　インプット内容を未完了エリアに追加する関数
   const onClickAdd = () => {
-    //   テキストボックスの値を取得し、初期化する
+    // inputされたテキストを取得し、input欄を削除する
     const inputText = document.getElementById("addText").value;
     document.getElementById("addText").value = "";
 
-    // liタグ生成
-    const li = document.createElement("li");
+    createIncompleteList(inputText);
+  };
 
-    //div生成
+  //未完了リストからの要素を削除する関数
+  const deleteFromIncompleteList = (target) => {
+    document.getElementById("incomplete-list").removeChild(target);
+  };
+
+  // 未完了のリストを作成する関数
+  const createIncompleteList = (text) => {
+    // todoを未完了エリアに追加する
+    const li = document.createElement("li");
     const div = document.createElement("div");
     div.className = "list-raw";
-
-    // p生成
     const p = document.createElement("p");
-    p.innerText = inputText;
-
-    // buttonタグの生成
+    p.innerText = text;
+    // 完了ボタンを生成
     const completeButton = document.createElement("button");
     completeButton.innerText = "完了";
     completeButton.addEventListener("click", () => {
-      // 要素の削除
-      deleteFromCompleteList(completeButton.closest(".list-raw").parentNode);
-      // 完了リストに追加する要素
-      const getnodeElement = completeButton.parentNode;
-      const addTarget = getnodeElement.parentNode;
-
-      const text = getnodeElement.firstElementChild.innerText;
-      getnodeElement.textContent = null;
-
-      // liタグ生成
-      const li = document.createElement("li");
-      // p生成
+      // 完了ボタンの動作-未完了エリアのTODOを削除し、完了エリアに移動させる
+      // 未完了エリアのTODOを削除
+      const deleteTarget = completeButton.closest(".list-raw").parentNode;
+      deleteFromIncompleteList(deleteTarget);
+      //完了エリアに移動させる
+      //完了エリアに描画する要素を作成
+      const addTarget = completeButton.parentNode.parentNode;
+      const text = addTarget.firstElementChild.firstElementChild.innerText;
+      addTarget.firstElementChild.textContent = null;
       const p = document.createElement("p");
-      //buttonタグの生成
-      const backButton = document.createElement("button");
-      backButton.innerText = "戻す";
-
       p.innerText = text;
-      getnodeElement.appendChild(p);
-      getnodeElement.appendChild(backButton);
-      li.appendChild(getnodeElement);
-
-      document.getElementById("complete-list").appendChild(li);
+      // 戻るボタンを生成
+      const backButton = document.createElement("button");
+      backButton.innerText = "戻る";
+      backButton.addEventListener("click", () => {
+        // 完了エリアのTODOを削除
+        const deleteTarget = backButton.closest(".list-raw").parentNode;
+        document.getElementById("complete-list").removeChild(deleteTarget);
+        // 未完了エリアにTODOを移動する
+        const text = backButton.parentNode.firstElementChild.innerText;
+        createIncompleteList(text);
+      });
+      // 作成した要素を整形
+      addTarget.firstElementChild.appendChild(p);
+      addTarget.firstElementChild.appendChild(backButton);
+      console.log(addTarget);
+      document.getElementById("complete-list").appendChild(addTarget);
     });
-    // 削除ボタンを
-    const deleteButton = document.createElement("button");
-    deleteButton.innerText = "削除";
-    deleteButton.addEventListener("click", () => {
-      //押された削除ボタンの親要素のliを未完了リストから削除
-      deleteFromCompleteList(deleteButton.closest(".list-raw").parentNode);
+    //削除ボタンを生成
+    const deleteButtom = document.createElement("button");
+    deleteButtom.innerText = "削除";
+    deleteButtom.addEventListener("click", () => {
+      // 削除ボタンの動作
+      const deleteTarget = completeButton.closest(".list-raw").parentNode;
+      deleteFromIncompleteList(deleteTarget);
     });
-
-    //divタグの子要素に各要素を設定
+    // HTMLを生計
     div.appendChild(p);
-
-    li.appendChild(div);
-
     div.appendChild(completeButton);
-    div.appendChild(deleteButton);
-
-    //未完了のリストに追加する
+    div.appendChild(deleteButtom);
+    li.appendChild(div);
+    // 未完了のTODOリストに追加
     document.getElementById("incomplete-list").appendChild(li);
-
-    // 未完了リストからボタンを押したリストを削除する
-    const deleteFromCompleteList = (target) => {
-      const movecomplete = completeButton.closest(".list-raw").parentNode;
-      document.getElementById("incomplete-list").removeChild(target);
-    };
   };
-
+  // 追加ボタンをクリックしたとき、[未完了のTODOタスクを追加する]が動作
   document
     .getElementById("addButton")
     .addEventListener("click", () => onClickAdd());
