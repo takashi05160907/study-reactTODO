@@ -126,9 +126,28 @@ parcelRequire = (function (modules, cache, entry, globalName) {
     var inputText = document.getElementById("addText").value;
     document.getElementById("addText").value = "";
 
+    // liタグ生成
+    var li = document.createElement("li");
+    console.log(li);
+
     //div生成
     var div = document.createElement("div");
+    div.className = "list-raw";
     console.log(div);
+
+    // p生成
+    var p = document.createElement("p");
+    p.innerText = inputText;
+    console.log(p);
+
+    //divタグの子要素に各要素を設定
+    div.appendChild(p);
+    console.log(div);
+    li.appendChild(div);
+    console.log(li);
+
+    //未完了のリストに追加する
+    document.getElementById("incomplete-list").appendChild(li);
   };
   document.getElementById("addButton").addEventListener("click", function () {
     return onClickAdd();
@@ -159,7 +178,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "35531" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "35815" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];
